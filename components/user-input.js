@@ -1,27 +1,27 @@
 let React = require('react');
-let ReactDOM = require('react-dom');
-var connect = require('react-redux').connect;
-let actions = require('../actions');
 let store = require('../store');
-let Provider = require('react-redux').Provider;
+let actions = require('../actions');
+var connect = require('react-redux').connect;
 
 const UserInput = React.createClass({
     onClick: function() {
-        console.log(actions);
+        console.log(this.userGuess);
         this.props.dispatch(
-            actions.guessNumber(this.props.userGuess)
+            actions.guessNumber(this.userGuess.val());
         )
     },
     render: function() {
         return(
             <div>
-                <form>
-                    <input type='text' ref='userGuess'/>
-                    <button type='submit' onClick={this.onClick}>Submit</button>
+                <form action="#">
+                    <input type='text' ref={(ref) => this.userGuess = ref} />
+                    <button type='button' onClick={this.onClick}>Enter</button>
                 </form>
             </div>
         )
     }
 });
 
-module.exports = UserInput
+var Container = connect()(UserInput);
+
+module.exports = Container;
