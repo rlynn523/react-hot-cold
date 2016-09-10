@@ -23069,10 +23069,12 @@
 	    switch (action.type) {
 	        case actions.GUESS_NUMBER:
 	            var correct = false;
+	            var winMsg = void 0;
 	            var errorMessage = void 0;
 	            action.number = parseInt(action.number);
 	            if (action.number === state.guessNumber) {
 	                correct = true;
+	                winMsg = 'You Win! Play Again?';
 	            }
 	            var guesses = state.guesses;
 	            if (isNaN(action.number)) {
@@ -23083,13 +23085,16 @@
 	            return Object.assign({}, state, {
 	                guesses: state.guesses,
 	                correctAnswer: correct,
+	                winMsg: winMsg,
 	                errorMessage: errorMessage
 	            });
 	            break;
 	        case actions.NEW_GAME:
-	            return Object.assign({}, initialState, {
-	                guessNumber: Math.floor(Math.random() * 100) + 1
+	            var newGame = Object.assign({}, initialState, {
+	                guessNumber: Math.floor(Math.random() * 100) + 1,
+	                guesses: []
 	            });
+	            return newGame;
 	            break;
 	        default:
 	            return state;
@@ -23139,9 +23144,9 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(34);
-	var UserInput = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./user-input\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var UserInput = __webpack_require__(200);
 	var GuessList = __webpack_require__(201);
+	var NewGame = __webpack_require__(202);
 	var connect = __webpack_require__(172).connect;
 	
 	/*
@@ -23160,38 +23165,73 @@
 	            'div',
 	            null,
 	            React.createElement(UserInput, null),
-	            React.createElement(GuessList, null)
+	            React.createElement(GuessList, null),
+	            React.createElement(NewGame, null)
 	        );
 	    }
 	});
-	var mapStateToProps = function mapStateToProps(state, props) {
-	    return {
-	        guesses: state.guesses
-	    };
-	};
 	
-	var Container = connect(mapStateToProps)(Game);
+	module.exports = Game;
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var store = __webpack_require__(196);
+	var actions = __webpack_require__(198);
+	var connect = __webpack_require__(172).connect;
+	
+	var UserInput = React.createClass({
+	    displayName: 'UserInput',
+	
+	    onClick: function onClick() {
+	        this.props.dispatch(actions.guessNumber(this.userGuess.value));
+	    },
+	    render: function render() {
+	        var _this = this;
+	
+	        return React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	                'form',
+	                { action: '#' },
+	                React.createElement('input', { type: 'text', ref: function ref(_ref) {
+	                        return _this.userGuess = _ref;
+	                    } }),
+	                React.createElement(
+	                    'button',
+	                    { type: 'button', onClick: this.onClick },
+	                    'Submit'
+	                )
+	            )
+	        );
+	    }
+	});
+	
+	var Container = connect()(UserInput);
 	
 	module.exports = Container;
 
 /***/ },
-/* 200 */,
 /* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(34);
-	var UserInput = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./user-input\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var connect = __webpack_require__(172).connect;
+	
+	var UserInput = __webpack_require__(200);
 	
 	var GuessList = React.createClass({
 	    displayName: 'GuessList',
 	
 	    render: function render() {
-	        if (this.props.guesses.length > 1) {
-	            console.log(this.props.guesses);
+	        if (this.props.guesses !== []) {
 	            var guesses = this.props.guesses.map(function (guess) {
 	                return React.createElement(
 	                    'li',
@@ -23207,7 +23247,8 @@
 	                'h1',
 	                null,
 	                'No guess yet!'
-	            )
+	            ),
+	            guesses
 	        );
 	    }
 	});
@@ -23217,6 +23258,38 @@
 	    };
 	};
 	var Container = connect(mapStateToProps)(GuessList);
+	module.exports = Container;
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var actions = __webpack_require__(198);
+	var connect = __webpack_require__(172).connect;
+	
+	var NewGame = React.createClass({
+	    displayName: 'NewGame',
+	
+	    onClick: function onClick() {
+	        this.props.dispatch(actions.newGame());
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	                'button',
+	                { type: 'button', onClick: this.onClick },
+	                'New Game'
+	            )
+	        );
+	    }
+	});
+	
+	var Container = connect()(NewGame);
 	
 	module.exports = Container;
 

@@ -1,7 +1,7 @@
 let React = require('react');
-let ReactDOM = require('react-dom');
 let UserInput = require('./user-input');
 let GuessList = require('./guess-list');
+let NewGame = require('./new-game');
 var connect = require('react-redux').connect;
 
 /*
@@ -18,16 +18,10 @@ var Game = React.createClass({
             <div>
                 <UserInput />
                 <GuessList />
+                <NewGame />
             </div>
         )
     }
 });
-var mapStateToProps = function(state, props) {
-    return {
-        guesses: state.guesses,
-    };
-};
 
-var Container = connect(mapStateToProps)(Game);
-
-module.exports = Container;
+module.exports = Game;

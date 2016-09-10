@@ -5,17 +5,16 @@ var connect = require('react-redux').connect;
 
 const UserInput = React.createClass({
     onClick: function() {
-        console.log(this.userGuess);
         this.props.dispatch(
-            actions.guessNumber(this.userGuess.val());
-        )
+            actions.guessNumber(this.userGuess.value)
+        );
     },
     render: function() {
         return(
             <div>
                 <form action="#">
                     <input type='text' ref={(ref) => this.userGuess = ref} />
-                    <button type='button' onClick={this.onClick}>Enter</button>
+                    <button type='button' onClick={this.onClick}>Submit</button>
                 </form>
             </div>
         )
