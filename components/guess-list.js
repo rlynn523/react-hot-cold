@@ -1,10 +1,9 @@
 let React = require('react');
-let connect = require('react-redux').connect;
-
-let UserInput = require('./user-input');
+var connect = require('react-redux').connect;
 
 const GuessList = React.createClass({
     render: function() {
+        console.log(this.props.guesses);
         if(this.props.guesses !== []) {
             var guesses = this.props.guesses.map(function(guess) {
                 return <li key={guess}>{guess}</li>
@@ -13,7 +12,7 @@ const GuessList = React.createClass({
         return(
             <ul>
                 <h1>No guess yet!</h1>
-                {guesses}
+                {this.props.guesses}
             </ul>
         );
     }

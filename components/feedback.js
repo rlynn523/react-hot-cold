@@ -4,7 +4,7 @@ var connect = require('react-redux').connect;
 const Feedback = React.createClass({
     render: function() {
         return(
-            <h3>How close you are: {this.props.msg}</h3>
+            <h3>{this.props.msg}</h3>
         )
     }
 });

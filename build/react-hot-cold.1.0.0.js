@@ -23059,7 +23059,8 @@
 	
 	var initialState = {
 	    guessNumber: Math.floor(Math.random() * 100) + 1,
-	    guesses: []
+	    guesses: [],
+	    msg: ''
 	};
 	
 	var HotColdReducer = function HotColdReducer() {
@@ -23089,21 +23090,21 @@
 	            }
 	            var guesses = state.guesses;
 	            if (isNaN(action.number)) {
-	                errorMessage = 'Please enter a number!';
+	                msg = 'Please enter a number!';
 	            } else {
-	                state.guesses.push(action.number);
+	                guesses.push(action.number);
 	            }
 	            return Object.assign({}, state, {
-	                guesses: state.guesses,
+	                guesses: guesses,
 	                correctAnswer: correct,
-	                msg: msg,
-	                errorMessage: errorMessage
+	                msg: msg
 	            });
 	            break;
 	        case actions.NEW_GAME:
-	            var newGame = Object.assign({}, initialState, {
+	            var newGame = Object.assign({}, state, {
 	                guessNumber: Math.floor(Math.random() * 100) + 1,
-	                guesses: []
+	                guesses: [],
+	                msg: 'New Game Started!'
 	            });
 	            return newGame;
 	            break;
@@ -23237,12 +23238,11 @@
 	var React = __webpack_require__(1);
 	var connect = __webpack_require__(172).connect;
 	
-	var UserInput = __webpack_require__(200);
-	
 	var GuessList = React.createClass({
 	    displayName: 'GuessList',
 	
 	    render: function render() {
+	        console.log(this.props.guesses);
 	        if (this.props.guesses !== []) {
 	            var guesses = this.props.guesses.map(function (guess) {
 	                return React.createElement(
@@ -23260,7 +23260,7 @@
 	                null,
 	                'No guess yet!'
 	            ),
-	            guesses
+	            this.props.guesses
 	        );
 	    }
 	});
@@ -23321,7 +23321,6 @@
 	        return React.createElement(
 	            'h3',
 	            null,
-	            'How close you are: ',
 	            this.props.msg
 	        );
 	    }

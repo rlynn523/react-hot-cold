@@ -2,7 +2,8 @@ var actions = require('./actions');
 
 var initialState = {
     guessNumber: Math.floor(Math.random() * 100) + 1,
-    guesses: []
+    guesses: [],
+    msg: ''
 };
 
 const HotColdReducer = (state = initialState, action) => {
@@ -29,21 +30,21 @@ const HotColdReducer = (state = initialState, action) => {
             }
             let guesses = state.guesses;
             if(isNaN(action.number)) {
-                errorMessage = 'Please enter a number!';
+                msg = 'Please enter a number!';
             } else {
-                state.guesses.push(action.number);
+                guesses.push(action.number);
             }
             return Object.assign({}, state, {
-                guesses: state.guesses,
+                guesses: guesses,
                 correctAnswer: correct,
-                msg: msg,
-                errorMessage: errorMessage
+                msg: msg
             });
         break;
         case actions.NEW_GAME:
-        var newGame = Object.assign({}, initialState, {
+        var newGame = Object.assign({}, state, {
             guessNumber: Math.floor(Math.random() * 100) + 1,
-            guesses: []
+            guesses: [],
+            msg: 'New Game Started!'
         })
             return newGame
         break;
