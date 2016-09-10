@@ -23069,12 +23069,23 @@
 	    switch (action.type) {
 	        case actions.GUESS_NUMBER:
 	            var correct = false;
-	            var winMsg = void 0;
+	            var msg = void 0;
 	            var errorMessage = void 0;
 	            action.number = parseInt(action.number);
 	            if (action.number === state.guessNumber) {
 	                correct = true;
-	                winMsg = 'You Win! Play Again?';
+	                msg = 'You Win! Play Again?';
+	            } else if (state.guessNumber - 5 <= action.number && action.number <= state.guessNumber + 5) {
+	                correct = false;
+	                msg = "Very Hot!";
+	            } else if (state.guessNumber - 15 <= action.number && action.number <= state.guessNumber + 15) {
+	                correct = false;
+	                msg = "Warm!";
+	            } else if (state.guessNumber - 25 <= action.number && action.number <= state.guessNumber + 25) {
+	                correct = false;
+	                msg = "Cold!";
+	            } else {
+	                msg = "Cold As Planet Hoth!";
 	            }
 	            var guesses = state.guesses;
 	            if (isNaN(action.number)) {
@@ -23085,7 +23096,7 @@
 	            return Object.assign({}, state, {
 	                guesses: state.guesses,
 	                correctAnswer: correct,
-	                winMsg: winMsg,
+	                msg: msg,
 	                errorMessage: errorMessage
 	            });
 	            break;
@@ -23147,6 +23158,7 @@
 	var UserInput = __webpack_require__(200);
 	var GuessList = __webpack_require__(201);
 	var NewGame = __webpack_require__(202);
+	var Feedback = __webpack_require__(203);
 	var connect = __webpack_require__(172).connect;
 	
 	/*
@@ -23165,6 +23177,7 @@
 	            'div',
 	            null,
 	            React.createElement(UserInput, null),
+	            React.createElement(Feedback, null),
 	            React.createElement(GuessList, null),
 	            React.createElement(NewGame, null)
 	        );
@@ -23213,7 +23226,6 @@
 	});
 	
 	var Container = connect()(UserInput);
-	
 	module.exports = Container;
 
 /***/ },
@@ -23291,6 +23303,36 @@
 	
 	var Container = connect()(NewGame);
 	
+	module.exports = Container;
+
+/***/ },
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var connect = __webpack_require__(172).connect;
+	
+	var Feedback = React.createClass({
+	    displayName: 'Feedback',
+	
+	    render: function render() {
+	        return React.createElement(
+	            'h3',
+	            null,
+	            'How close you are: ',
+	            this.props.msg
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        msg: state.msg
+	    };
+	};
+	var Container = connect(mapStateToProps)(Feedback);
 	module.exports = Container;
 
 /***/ }

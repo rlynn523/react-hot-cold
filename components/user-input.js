@@ -22,5 +22,4 @@ const UserInput = React.createClass({
 });
 
 var Container = connect()(UserInput);
-
 module.exports = Container;

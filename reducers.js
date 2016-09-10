@@ -9,12 +9,23 @@ const HotColdReducer = (state = initialState, action) => {
     switch (action.type) {
         case actions.GUESS_NUMBER:
             let correct = false;
-            let winMsg;
+            let msg;
             let errorMessage;
             action.number = parseInt(action.number);
             if(action.number === state.guessNumber) {
                 correct = true;
-                winMsg = 'You Win! Play Again?'
+                msg = 'You Win! Play Again?'
+            } else if (state.guessNumber - 5 <= action.number && action.number <= state.guessNumber + 5) {
+                correct = false;
+                msg = "Very Hot!";
+            } else if (state.guessNumber - 15 <= action.number && action.number <= state.guessNumber + 15) {
+                correct = false;
+                msg = "Warm!";
+            } else if (state.guessNumber - 25 <= action.number && action.number <= state.guessNumber + 25) {
+                correct = false;
+                msg = "Cold!";
+            } else {
+                msg = "Cold As Planet Hoth!"
             }
             let guesses = state.guesses;
             if(isNaN(action.number)) {
@@ -25,7 +36,7 @@ const HotColdReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                 guesses: state.guesses,
                 correctAnswer: correct,
-                winMsg: winMsg,
+                msg: msg,
                 errorMessage: errorMessage
             });
         break;

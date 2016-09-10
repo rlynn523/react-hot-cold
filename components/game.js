@@ -2,6 +2,7 @@ let React = require('react');
 let UserInput = require('./user-input');
 let GuessList = require('./guess-list');
 let NewGame = require('./new-game');
+let Feedback = require('./feedback');
 var connect = require('react-redux').connect;
 
 /*
@@ -17,6 +18,7 @@ var Game = React.createClass({
         return(
             <div>
                 <UserInput />
+                <Feedback />
                 <GuessList />
                 <NewGame />
             </div>
