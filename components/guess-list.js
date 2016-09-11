@@ -3,23 +3,21 @@ var connect = require('react-redux').connect;
 
 const GuessList = React.createClass({
     render: function() {
-        console.log(this.props.guesses);
-        if(this.props.guesses !== []) {
-            var guesses = this.props.guesses.map(function(guess) {
-                return <li key={guess}>{guess}</li>
-            });
-        }
+        var guesses='';
+        var guessList = this.props.guessList;
+            for(var i=0; i < guessList.length; i++) {
+                guesses += this.props.guessList[i] + ' ';
+            }
         return(
             <ul>
-                <h1>No guess yet!</h1>
-                {this.props.guesses}
+                {guesses}
             </ul>
         );
     }
 })
 var mapStateToProps = function(state, props) {
     return {
-        guesses: state.guesses,
+        guessList: state.guesses,
     };
 };
 var Container = connect(mapStateToProps)(GuessList);

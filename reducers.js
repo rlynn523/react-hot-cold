@@ -28,14 +28,14 @@ const HotColdReducer = (state = initialState, action) => {
             } else {
                 msg = "Cold As Planet Hoth!"
             }
-            let guesses = state.guesses;
+            let guessList = state.guesses.concat(action.number);
             if(isNaN(action.number)) {
                 msg = 'Please enter a number!';
             } else {
-                guesses.push(action.number);
+                guessList;
             }
             return Object.assign({}, state, {
-                guesses: guesses,
+                guesses: guessList,
                 correctAnswer: correct,
                 msg: msg
             });

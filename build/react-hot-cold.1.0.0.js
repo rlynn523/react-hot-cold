@@ -51,7 +51,7 @@
 	var Provider = __webpack_require__(172).Provider;
 	
 	var store = __webpack_require__(196);
-	var Game = __webpack_require__(199);
+	var Game = __webpack_require__(200);
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	    ReactDOM.render(React.createElement(
@@ -23043,19 +23043,49 @@
 	
 	var redux = __webpack_require__(179);
 	var createStore = redux.createStore;
+	var applyMiddleware = redux.applyMiddleware;
+	var thunk = __webpack_require__(197).default;
 	
-	var reducers = __webpack_require__(197);
+	var reducers = __webpack_require__(198);
 	
-	var store = createStore(reducers.HotColdReducer);
+	var store = createStore(reducers.HotColdReducer, applyMiddleware(thunk));
 	module.exports = store;
 
 /***/ },
 /* 197 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	function createThunkMiddleware(extraArgument) {
+	  return function (_ref) {
+	    var dispatch = _ref.dispatch;
+	    var getState = _ref.getState;
+	    return function (next) {
+	      return function (action) {
+	        if (typeof action === 'function') {
+	          return action(dispatch, getState, extraArgument);
+	        }
+	
+	        return next(action);
+	      };
+	    };
+	  };
+	}
+	
+	var thunk = createThunkMiddleware();
+	thunk.withExtraArgument = createThunkMiddleware;
+	
+	exports['default'] = thunk;
+
+/***/ },
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var actions = __webpack_require__(198);
+	var actions = __webpack_require__(199);
 	
 	var initialState = {
 	    guessNumber: Math.floor(Math.random() * 100) + 1,
@@ -23088,14 +23118,14 @@
 	            } else {
 	                msg = "Cold As Planet Hoth!";
 	            }
-	            var guesses = state.guesses;
+	            var guessList = state.guesses.concat(action.number);
 	            if (isNaN(action.number)) {
 	                msg = 'Please enter a number!';
 	            } else {
-	                guesses.push(action.number);
+	                guessList;
 	            }
 	            return Object.assign({}, state, {
-	                guesses: guesses,
+	                guesses: guessList,
 	                correctAnswer: correct,
 	                msg: msg
 	            });
@@ -23116,7 +23146,7 @@
 	exports.HotColdReducer = HotColdReducer;
 
 /***/ },
-/* 198 */
+/* 199 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -23150,16 +23180,16 @@
 	exports.newGame = newGame;
 
 /***/ },
-/* 199 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var UserInput = __webpack_require__(200);
-	var GuessList = __webpack_require__(201);
-	var NewGame = __webpack_require__(202);
-	var Feedback = __webpack_require__(203);
+	var UserInput = __webpack_require__(201);
+	var GuessList = __webpack_require__(202);
+	var NewGame = __webpack_require__(203);
+	var Feedback = __webpack_require__(204);
 	var connect = __webpack_require__(172).connect;
 	
 	/*
@@ -23188,14 +23218,14 @@
 	module.exports = Game;
 
 /***/ },
-/* 200 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	var store = __webpack_require__(196);
-	var actions = __webpack_require__(198);
+	var actions = __webpack_require__(199);
 	var connect = __webpack_require__(172).connect;
 	
 	var UserInput = React.createClass({
@@ -23230,7 +23260,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 201 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23242,44 +23272,34 @@
 	    displayName: 'GuessList',
 	
 	    render: function render() {
-	        console.log(this.props.guesses);
-	        if (this.props.guesses !== []) {
-	            var guesses = this.props.guesses.map(function (guess) {
-	                return React.createElement(
-	                    'li',
-	                    { key: guess },
-	                    guess
-	                );
-	            });
+	        var guesses = '';
+	        var guessList = this.props.guessList;
+	        for (var i = 0; i < guessList.length; i++) {
+	            guesses += this.props.guessList[i] + ' ';
 	        }
 	        return React.createElement(
 	            'ul',
 	            null,
-	            React.createElement(
-	                'h1',
-	                null,
-	                'No guess yet!'
-	            ),
-	            this.props.guesses
+	            guesses
 	        );
 	    }
 	});
 	var mapStateToProps = function mapStateToProps(state, props) {
 	    return {
-	        guesses: state.guesses
+	        guessList: state.guesses
 	    };
 	};
 	var Container = connect(mapStateToProps)(GuessList);
 	module.exports = Container;
 
 /***/ },
-/* 202 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var actions = __webpack_require__(198);
+	var actions = __webpack_require__(199);
 	var connect = __webpack_require__(172).connect;
 	
 	var NewGame = React.createClass({
@@ -23306,7 +23326,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
