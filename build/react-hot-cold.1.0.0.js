@@ -23090,7 +23090,8 @@
 	var initialState = {
 	    guessNumber: Math.floor(Math.random() * 100) + 1,
 	    guesses: [],
-	    msg: ''
+	    msg: '',
+	    userGuess: ''
 	};
 	
 	var HotColdReducer = function HotColdReducer() {
@@ -23118,14 +23119,14 @@
 	            } else {
 	                msg = "Cold As Planet Hoth!";
 	            }
-	            var guessList = state.guesses.concat(action.number);
+	            var guessLists = state.guesses.concat(action.number);
 	            if (isNaN(action.number)) {
 	                msg = 'Please enter a number!';
 	            } else {
-	                guessList;
+	                guessLists;
 	            }
 	            return Object.assign({}, state, {
-	                guesses: guessList,
+	                guesses: guessLists,
 	                correctAnswer: correct,
 	                msg: msg
 	            });
@@ -23232,20 +23233,17 @@
 	    displayName: 'UserInput',
 	
 	    onClick: function onClick() {
-	        this.props.dispatch(actions.guessNumber(this.userGuess.value));
+	        this.props.dispatch(actions.guessNumber(this.refs.userGuess.value));
+	        this.refs.userGuess.value = '';
 	    },
 	    render: function render() {
-	        var _this = this;
-	
 	        return React.createElement(
 	            'div',
 	            null,
 	            React.createElement(
 	                'form',
 	                { action: '#' },
-	                React.createElement('input', { type: 'text', ref: function ref(_ref) {
-	                        return _this.userGuess = _ref;
-	                    } }),
+	                React.createElement('input', { type: 'text', ref: 'userGuess' }),
 	                React.createElement(
 	                    'button',
 	                    { type: 'button', onClick: this.onClick },
@@ -23273,20 +23271,23 @@
 	
 	    render: function render() {
 	        var guesses = '';
-	        var guessList = this.props.guessList;
-	        for (var i = 0; i < guessList.length; i++) {
-	            guesses += this.props.guessList[i] + ' ';
-	        }
+	        var guessLists = this.props.guessLists.map(function (guessList) {
+	            return React.createElement(
+	                'li',
+	                { key: guessList },
+	                guessList
+	            );
+	        });
 	        return React.createElement(
 	            'ul',
 	            null,
-	            guesses
+	            guessLists
 	        );
 	    }
 	});
 	var mapStateToProps = function mapStateToProps(state, props) {
 	    return {
-	        guessList: state.guesses
+	        guessLists: state.guesses
 	    };
 	};
 	var Container = connect(mapStateToProps)(GuessList);
