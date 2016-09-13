@@ -8,7 +8,7 @@ const UserInput = React.createClass({
         this.props.dispatch(
             actions.guessNumber(this.refs.userGuess.value)
         );
-        this.refs.userGuess.value = ''
+        this.refs.userGuess.value = '';
     },
     render: function() {
         return(

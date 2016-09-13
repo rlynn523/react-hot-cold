@@ -3,6 +3,7 @@ let UserInput = require('./user-input');
 let GuessList = require('./guess-list');
 let NewGame = require('./new-game');
 let Feedback = require('./feedback');
+let Counter = require('./counter');
 var connect = require('react-redux').connect;
 
 /*
@@ -17,7 +18,9 @@ var Game = React.createClass({
     render: function(){
         return(
             <div>
+                <h1>Hot or Cold!</h1>
                 <UserInput />
+                <Counter />
                 <Feedback />
                 <GuessList />
                 <NewGame />

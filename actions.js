@@ -6,10 +6,11 @@ Actions
 */
 
 var GUESS_NUMBER = 'GUESS_NUMBER';
-var guessNumber = function(number) {
+var guessNumber = function(number, counter) {
     return {
         type: GUESS_NUMBER,
         number: number,
+        counter: counter
     };
 };
 

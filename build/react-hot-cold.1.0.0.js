@@ -51,7 +51,7 @@
 	var Provider = __webpack_require__(172).Provider;
 	
 	var store = __webpack_require__(196);
-	var Game = __webpack_require__(200);
+	var Game = __webpack_require__(199);
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	    ReactDOM.render(React.createElement(
@@ -23085,11 +23085,12 @@
 
 	'use strict';
 	
-	var actions = __webpack_require__(199);
+	var actions = __webpack_require__(201);
 	
 	var initialState = {
 	    guessNumber: Math.floor(Math.random() * 100) + 1,
 	    guesses: [],
+	    counter: 0,
 	    msg: '',
 	    userGuess: ''
 	};
@@ -23102,6 +23103,7 @@
 	        case actions.GUESS_NUMBER:
 	            var correct = false;
 	            var msg = void 0;
+	            var counter = 0;
 	            var errorMessage = void 0;
 	            action.number = parseInt(action.number);
 	            if (action.number === state.guessNumber) {
@@ -23120,14 +23122,17 @@
 	                msg = "Cold As Planet Hoth!";
 	            }
 	            var guessLists = state.guesses.concat(action.number);
+	            counter = state.counter + 1;
 	            if (isNaN(action.number)) {
 	                msg = 'Please enter a number!';
 	            } else {
 	                guessLists;
+	                counter;
 	            }
 	            return Object.assign({}, state, {
 	                guesses: guessLists,
 	                correctAnswer: correct,
+	                counter: counter,
 	                msg: msg
 	            });
 	            break;
@@ -23135,6 +23140,7 @@
 	            var newGame = Object.assign({}, state, {
 	                guessNumber: Math.floor(Math.random() * 100) + 1,
 	                guesses: [],
+	                counter: 0,
 	                msg: 'New Game Started!'
 	            });
 	            return newGame;
@@ -23148,49 +23154,16 @@
 
 /***/ },
 /* 199 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/*
-	Actions
-	-User can guess a number
-	-User guess a string
-	-User can start a new game
-	*/
-	
-	var GUESS_NUMBER = 'GUESS_NUMBER';
-	var guessNumber = function guessNumber(number) {
-	    return {
-	        type: GUESS_NUMBER,
-	        number: number
-	    };
-	};
-	
-	var NEW_GAME = 'NEW_GAME';
-	var newGame = function newGame(game, number) {
-	    return {
-	        type: NEW_GAME,
-	        game: game
-	    };
-	};
-	
-	exports.GUESS_NUMBER = GUESS_NUMBER;
-	exports.guessNumber = guessNumber;
-	exports.NEW_GAME = NEW_GAME;
-	exports.newGame = newGame;
-
-/***/ },
-/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var UserInput = __webpack_require__(201);
+	var UserInput = __webpack_require__(200);
 	var GuessList = __webpack_require__(202);
 	var NewGame = __webpack_require__(203);
 	var Feedback = __webpack_require__(204);
+	var Counter = __webpack_require__(205);
 	var connect = __webpack_require__(172).connect;
 	
 	/*
@@ -23208,7 +23181,13 @@
 	        return React.createElement(
 	            'div',
 	            null,
+	            React.createElement(
+	                'h1',
+	                null,
+	                'Hot or Cold!'
+	            ),
 	            React.createElement(UserInput, null),
+	            React.createElement(Counter, null),
 	            React.createElement(Feedback, null),
 	            React.createElement(GuessList, null),
 	            React.createElement(NewGame, null)
@@ -23219,14 +23198,14 @@
 	module.exports = Game;
 
 /***/ },
-/* 201 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
 	var store = __webpack_require__(196);
-	var actions = __webpack_require__(199);
+	var actions = __webpack_require__(201);
 	var connect = __webpack_require__(172).connect;
 	
 	var UserInput = React.createClass({
@@ -23256,6 +23235,41 @@
 	
 	var Container = connect()(UserInput);
 	module.exports = Container;
+
+/***/ },
+/* 201 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	/*
+	Actions
+	-User can guess a number
+	-User guess a string
+	-User can start a new game
+	*/
+	
+	var GUESS_NUMBER = 'GUESS_NUMBER';
+	var guessNumber = function guessNumber(number, counter) {
+	    return {
+	        type: GUESS_NUMBER,
+	        number: number,
+	        counter: counter
+	    };
+	};
+	
+	var NEW_GAME = 'NEW_GAME';
+	var newGame = function newGame(game, number) {
+	    return {
+	        type: NEW_GAME,
+	        game: game
+	    };
+	};
+	
+	exports.GUESS_NUMBER = GUESS_NUMBER;
+	exports.guessNumber = guessNumber;
+	exports.NEW_GAME = NEW_GAME;
+	exports.newGame = newGame;
 
 /***/ },
 /* 202 */
@@ -23300,7 +23314,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var actions = __webpack_require__(199);
+	var actions = __webpack_require__(201);
 	var connect = __webpack_require__(172).connect;
 	
 	var NewGame = React.createClass({
@@ -23353,6 +23367,36 @@
 	    };
 	};
 	var Container = connect(mapStateToProps)(Feedback);
+	module.exports = Container;
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var connect = __webpack_require__(172).connect;
+	
+	var Counter = React.createClass({
+	    displayName: 'Counter',
+	
+	    render: function render() {
+	        return React.createElement(
+	            'h3',
+	            null,
+	            'Number of Guesses: ',
+	            this.props.counter
+	        );
+	    }
+	});
+	
+	var mapStateToProps = function mapStateToProps(state, props) {
+	    return {
+	        counter: state.counter
+	    };
+	};
+	var Container = connect(mapStateToProps)(Counter);
 	module.exports = Container;
 
 /***/ }
