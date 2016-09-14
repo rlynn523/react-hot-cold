@@ -5,7 +5,8 @@ var initialState = {
     guesses: [],
     counter: 0,
     msg: '',
-    userGuess: ''
+    userGuess: '',
+    fewestGuesses: 0
 };
 
 const HotColdReducer = (state = initialState, action) => {
@@ -18,7 +19,7 @@ const HotColdReducer = (state = initialState, action) => {
             action.number = parseInt(action.number);
             if(action.number === state.guessNumber) {
                 correct = true;
-                msg = 'You Win! Play Again?'
+                msg = 'You Win! Play Again?';
             } else if (state.guessNumber - 5 <= action.number && action.number <= state.guessNumber + 5) {
                 correct = false;
                 msg = "Very Hot!";
@@ -54,6 +55,14 @@ const HotColdReducer = (state = initialState, action) => {
             msg: 'New Game Started!'
         })
             return newGame
+        break;
+        let fewestGuesses;
+        case actions.FETCH_FEWEST_GUESSES:
+        case actions.POST_FEWEST_GUESSES:
+            var fewestUserGuesses = Object.assign({}, state, {
+                fewestGuesses: state.counter
+            })
+            return state;
         break;
         default:
             return state;

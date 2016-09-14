@@ -8,6 +8,14 @@ app.use(express.static('build'));
 mongoose.connect('mongodb://localhost/hot-cold');
 
 var Guesses = require('./models/guesses');
+var fewestGuesses;
+
+app.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 app.get('/fewest-guesses', function(req, res) {
     Guesses.find(function(err, guesses) {
@@ -20,20 +28,25 @@ app.get('/fewest-guesses', function(req, res) {
         if (err) {
             return res.status(500);
         }
-        console.log(count);
     })
 });
 
 app.post('/fewest-guesses', function(req, res) {
-    Guesses.create({
-        guess: req.body.guess
-    }, function(err, guesses) {
-        if (err) {
-            return res.status(500).json({
-                message: 'Internal Server Error'
-            });
-        }
-        res.status(201).json(guesses);
-    });
+    if(!fewestGuesses || fewestGuesses > req.body.fewestGuesses){
+        console.log(req.body.fewestGuesses);
+        fewestGuesses = req.body.fewestGuesses
+    }
+    return res.status(201).json(fewestGuesses);
+    // Guesses.create({
+    //     guess: req.body.guess
+    // }, function(err, guesses) {
+    //     if (err) {
+    //         return res.status(500).json({
+    //             message: 'Internal Server Error'
+    //         });
+    //     }
+    //     res.status(201).json(guesses);
+    // });
 });
+
 app.listen(process.env.PORT || 8080, process.env.IP);
