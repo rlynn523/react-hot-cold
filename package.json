@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "supervisor server.js",
     "build": "npm run clean && webpack",
     "watch": "npm run build && webpack --watch",
     "clean": "rm -f build/$npm_package_name.$npm_package_version.js build/$npm_package_name.$npm_package_version.js.map"

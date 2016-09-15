@@ -6,8 +6,10 @@ var initialState = {
     counter: 0,
     msg: '',
     userGuess: '',
-    fewestGuesses: 0
+    fewestGuesses: 0,
+    currentUserScore: 0
 };
+console.log(initialState.guessNumber);
 
 const HotColdReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -56,13 +58,23 @@ const HotColdReducer = (state = initialState, action) => {
         })
             return newGame
         break;
-        let fewestGuesses;
-        case actions.FETCH_FEWEST_GUESSES:
-        case actions.POST_FEWEST_GUESSES:
+        case actions.FETCH_FEWEST_GUESSES_SUCCESS:
+        var fewestGuesses = action.fewestGuesses;
             var fewestUserGuesses = Object.assign({}, state, {
-                fewestGuesses: state.counter
+                fewestGuesses: fewestGuesses
             })
-            return state;
+            return fewestUserGuesses;
+        break;
+        case actions.POST_FEWEST_GUESSES_SUCCESS:
+        counter = state.counter;
+        var currentUserScore = counter;
+        var currentBestScore = state.guesses.length;
+        if(currentUserScore < currentBestScore) {
+            var newScore = Object.assign({}, state, {
+               currentUserScore: currentUserScore
+           })
+            return newScore;
+        }
         break;
         default:
             return state;

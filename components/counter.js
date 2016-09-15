@@ -1,7 +1,13 @@
 let React = require('react');
+let actions = require('../actions');
 var connect = require('react-redux').connect;
 
 const Counter = React.createClass({
+    componentDidMount: function() {
+        this.props.dispatch(
+            actions.fetchGuesses(this.props.fewestGuesses)
+        );
+    },
     render: function() {
         return(
             <div>

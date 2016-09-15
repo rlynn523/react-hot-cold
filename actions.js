@@ -23,15 +23,24 @@ var newGame = function(game, number) {
     };
 };
 
-var FETCH_FEWEST_GUESSES = 'FETCH_FEWEST_GUESSES';
-var fetchFewestGuesses = function(guesses) {
+var FETCH_FEWEST_GUESSES_SUCCESS = 'FETCH_FEWEST_GUESSES_SUCCESS';
+var fetchFewestGuessesSuccess = function(fewestGuesses) {
     return {
-        type: FETCH_FEWEST_GUESSES,
-        guesses: guesses
+        type: FETCH_FEWEST_GUESSES_SUCCESS,
+        fewestGuesses: fewestGuesses
     }
 }
 
-var fetchGuesses = function(guesses) {
+var FETCH_FEWEST_GUESSES_ERROR = 'FETCH_FEWEST_GUESSES_ERROR';
+var fetchFewestGuessesError = function(fewestGuesses, error) {
+    return {
+        type: FETCH_FEWEST_GUESSES_ERROR,
+        fewestGuesses: fewestGuesses,
+        error: error
+    }
+}
+
+var fetchGuesses = function(fewestGuesses) {
     return function(dispatch) {
         var url = 'http://localhost:8080/fewest-guesses';
         return fetch(url).then(function(response) {
@@ -43,22 +52,36 @@ var fetchGuesses = function(guesses) {
            return response.json();
        })
        .then(function(data) {
-           var guesses = data;
+           var fewestGuesses = data[0].bestScore;
            return dispatch(
-               fetchFewestGuesses(guesses)
+               fetchFewestGuessesSuccess(fewestGuesses)
+           )
+       })
+       .catch(function(error) {
+           return dispatch(
+               fetchFewestGuessesError(fewestGuesses, error)
            )
        })
     }
 }
 
-var POST_FEWEST_GUESSES = 'POST_FEWEST_GUESSES';
-var postFewestGuesses = function(fewestGuesses) {
+var POST_FEWEST_GUESSES_SUCCESS = 'POST_FEWEST_GUESSES_SUCCESS';
+var postFewestGuessesSuccess = function(currentUserScore) {
     return {
-        type: POST_FEWEST_GUESSES,
-        fewestGuesses: fewestGuesses
+        type: POST_FEWEST_GUESSES_SUCCESS,
+        currentUserScore: currentUserScore
     }
 }
-var postGuesses = function(fewestGuesses) {
+
+var POST_FEWEST_GUESSES_ERROR = 'POST_FEWEST_GUESSES_ERROR';
+var postFewestGuessesError = function(currentUserScore, error) {
+    return {
+        type: POST_FEWEST_GUESSES_ERROR,
+        currentUserScore: currentUserScore,
+        error: error
+    }
+}
+var postGuesses = function(currentUserScore) {
     return function(dispatch) {
         var url = 'http://localhost:8080/fewest-guesses';
         return fetch(url, {
@@ -66,31 +89,36 @@ var postGuesses = function(fewestGuesses) {
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify({
-                fewestGuesses
-            })
+            body: JSON.stringify({currentUserScore})
         }).then(function(response) {
             if (response.status < 200 || response.status >= 300) {
                var error = new Error(response.statusText)
                error.response = response
                throw error;
            }
-           return response.json();
+           return response.json({});
        })
        .then(function(data) {
-           var guesses = data;
            return dispatch(
-               postFewestGuesses(guesses)
+               postFewestGuessesSuccess(currentUserScore)
            )
        })
+       .catch(function(err){
+           console.log(err);
+       });
     }
 }
-
-exports.fetchGuesses = fetchGuesses;
-exports.FETCH_FEWEST_GUESSES = FETCH_FEWEST_GUESSES;
-exports.postGuesses = postGuesses;
-exports.POST_FEWEST_GUESSES = POST_FEWEST_GUESSES;
 exports.GUESS_NUMBER = GUESS_NUMBER;
 exports.guessNumber = guessNumber;
 exports.NEW_GAME = NEW_GAME;
 exports.newGame = newGame;
+exports.fetchFewestGuessesSuccess = fetchFewestGuessesSuccess;
+exports.FETCH_FEWEST_GUESSES_SUCCESS = FETCH_FEWEST_GUESSES_SUCCESS;
+exports.fetchFewestGuessesError = fetchFewestGuessesError;
+exports.FETCH_FEWEST_GUESSES_ERROR = FETCH_FEWEST_GUESSES_ERROR;
+exports.postFewestGuessesSuccess= postFewestGuessesSuccess;
+exports.POST_FEWEST_GUESSES_SUCCESS = POST_FEWEST_GUESSES_SUCCESS;
+exports.postFewestGuessesError= postFewestGuessesError;
+exports.POST_FEWEST_GUESSES_ERROR = POST_FEWEST_GUESSES_ERROR;
+exports.fetchGuesses = fetchGuesses;
+exports.postGuesses = postGuesses

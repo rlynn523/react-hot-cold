@@ -8,7 +8,7 @@ app.use(express.static('build'));
 mongoose.connect('mongodb://localhost/hot-cold');
 
 var Guesses = require('./models/guesses');
-var fewestGuesses;
+var bestScore;
 
 app.all('*', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -17,36 +17,30 @@ app.all('*', function(req, res, next) {
   next();
 });
 
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
 app.get('/fewest-guesses', function(req, res) {
-    Guesses.find(function(err, guesses) {
+    Guesses.find(function(err, bestScore) {
         if (err) {
             return res.status(500);
         }
-        res.send(guesses)
+        res.send(bestScore)
     });
-    Guesses.count(function(err, count) {
-        if (err) {
-            return res.status(500);
-        }
-    })
 });
 
 app.post('/fewest-guesses', function(req, res) {
-    if(!fewestGuesses || fewestGuesses > req.body.fewestGuesses){
-        console.log(req.body.fewestGuesses);
-        fewestGuesses = req.body.fewestGuesses
-    }
-    return res.status(201).json(fewestGuesses);
-    // Guesses.create({
-    //     guess: req.body.guess
-    // }, function(err, guesses) {
-    //     if (err) {
-    //         return res.status(500).json({
-    //             message: 'Internal Server Error'
-    //         });
-    //     }
-    //     res.status(201).json(guesses);
-    // });
+    Guesses.update({
+        $set: {bestScore: req.body.currentUserScore}
+    }, function(err, bestScore) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        res.status(201).json(bestScore);
+    });
 });
 
 app.listen(process.env.PORT || 8080, process.env.IP);
