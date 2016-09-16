@@ -104,7 +104,6 @@ var postGuesses = function(currentUserScore) {
            )
        })
        .catch(function(err){
-           console.log(err);
        });
     }
 }

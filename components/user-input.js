@@ -5,14 +5,14 @@ var connect = require('react-redux').connect;
 
 const UserInput = React.createClass({
     onClick: function() {
-        if(this.props.correctAnswer === true) {
-            this.props.dispatch(
-                actions.postGuesses(this.props.counter)
-            );
+        let returnNumber = this.props.dispatch(
+            actions.guessNumber(this.refs.userGuess.value, this.props.counter)
+        )
+        if(store.getState().correctAnswer === true) {
+            store.dispatch(
+                actions.postGuesses(store.getState().counter)
+            )
         }
-        this.props.dispatch(
-            actions.guessNumber(this.refs.userGuess.value)
-        );
         this.refs.userGuess.value = '';
     },
     render: function() {

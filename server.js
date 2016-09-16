@@ -31,15 +31,21 @@ app.get('/fewest-guesses', function(req, res) {
 });
 
 app.post('/fewest-guesses', function(req, res) {
-    Guesses.update({
-        $set: {bestScore: req.body.currentUserScore}
-    }, function(err, bestScore) {
-        if (err) {
-            return res.status(500).json({
-                message: 'Internal Server Error'
+    Guesses.findOne(function(err, bestScore) {
+        if(parseInt(bestScore.bestScore) > parseInt(req.body.currentUserScore)) {
+            Guesses.update({
+                $set: {bestScore: req.body.currentUserScore}
+            }, function(err, bestScore) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Internal Server Error'
+                    });
+                }
+                res.status(201).json(bestScore);
             });
+        } else {
+            res.status(200).json(bestScore);
         }
-        res.status(201).json(bestScore);
     });
 });
 

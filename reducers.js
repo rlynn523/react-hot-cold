@@ -68,13 +68,10 @@ const HotColdReducer = (state = initialState, action) => {
         case actions.POST_FEWEST_GUESSES_SUCCESS:
         counter = state.counter;
         var currentUserScore = counter;
-        var currentBestScore = state.guesses.length;
-        if(currentUserScore < currentBestScore) {
             var newScore = Object.assign({}, state, {
                currentUserScore: currentUserScore
            })
             return newScore;
-        }
         break;
         default:
             return state;
